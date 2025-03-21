@@ -78,7 +78,7 @@ const VerifyCertificate = ({ canisterId, idlFactory }) => {
 
                 <form onSubmit={handleVerifyCertificate} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Certificate ID</label>
+                        <label className="block text-sm font-medium text-gray-700">User ID</label>
                         <input
                             type="text"
                             required
@@ -91,9 +91,9 @@ const VerifyCertificate = ({ canisterId, idlFactory }) => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full py-2 px-4 border rounded-md bg-blue-600 text-white"
+                        className="px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors"
                     >
-                        {isLoading ? "Verifying..." : "Verify Certificate"}
+                        {isLoading ? "Verifying..." : "Verify User"}
                     </button>
                 </form>
 

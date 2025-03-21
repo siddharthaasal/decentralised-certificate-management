@@ -7,6 +7,7 @@ const IssueCertificate = ({ canisterId, idlFactory }) => {
     const [recipientPrincipal, setRecipientPrincipal] = useState("");
     const [recipientName, setRecipientName] = useState("");
     const [ipfsHash, setIpfsHash] = useState("");
+    const [issuedCertificateId, setIssuedCertificateId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [actor, setActor] = useState(null);
 
@@ -46,7 +47,6 @@ const IssueCertificate = ({ canisterId, idlFactory }) => {
     }, []);
 
     // Function to issue a certificate
-
     const handleIssueCertificate = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -77,7 +77,13 @@ const IssueCertificate = ({ canisterId, idlFactory }) => {
             console.log("Issuing Certificate for:", recipientName, principalObj.toString(), ipfsHash);
             const response = await actor.issueCertificate(recipientName, principalObj, ipfsHash);
 
-            toast.success("Certificate Issued Successfully!");
+            if (response) {
+                setIssuedCertificateId(response); // Store the issued certificate ID
+                toast.success(`Certificate Issued Successfully! ID: ${response}`);
+            } else {
+                toast.error("Certificate issuance failed. Please try again.");
+            }
+
             console.log("Certificate Issued:", response);
         } catch (error) {
             toast.error("Error Issuing Certificate. Check console for details.");
@@ -87,9 +93,8 @@ const IssueCertificate = ({ canisterId, idlFactory }) => {
         }
     };
 
-
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                 <h2 className="text-center text-3xl font-extrabold text-gray-900">
                     Issue Certificate
@@ -97,7 +102,7 @@ const IssueCertificate = ({ canisterId, idlFactory }) => {
 
                 <form onSubmit={handleIssueCertificate} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Recipient Name</label>
+                        <label className="block text-sm font-medium text-gray-700">Certificate Name</label>
                         <input
                             type="text"
                             required
@@ -132,16 +137,25 @@ const IssueCertificate = ({ canisterId, idlFactory }) => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full py-2 px-4 border rounded-md bg-green-600 text-white"
+                        className="px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors"
                     >
                         {isLoading ? "Issuing..." : "Issue Certificate"}
                     </button>
                 </form>
+
+                {/* Display Issued Certificate ID */}
+                {issuedCertificateId && (
+                    <div className="mt-6 p-4 bg-green-100 text-green-800 border border-green-300 rounded-md">
+                        <h3 className="text-lg font-medium">Certificate Issued Successfully!</h3>
+                        <p className="mt-1">
+                            <span className="font-medium">Certificate ID:</span>{" "}
+                            <span className="text-slate-900">{issuedCertificateId}</span>
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     );
 };
 
 export default IssueCertificate;
-
-

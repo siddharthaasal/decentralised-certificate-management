@@ -4,6 +4,8 @@ import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Int "mo:base/Int"; // Fixes the Int module error
 import Iter "mo:base/Iter";
+import List "mo:base/List";
+import Array "mo:base/Array"
 
 actor CertificateRegistry {
   type Certificate = {
@@ -66,4 +68,17 @@ actor CertificateRegistry {
   public query func getCertificate(certId : Text) : async ?Certificate {
     certificates.get(certId);
   };
+
+  public query func getCertificatesForUser(userPrincipal : Principal) : async [Certificate] {
+    var userCerts = List.nil<Certificate>(); // Start with an empty list
+
+    for (cert in certificates.vals()) {
+      if (cert.recipient == userPrincipal) {
+        userCerts := List.push(cert, userCerts); // Push matching certs to the list
+      };
+    };
+
+    return List.toArray(userCerts); // Convert List to Array before returning
+  };
+
 };
