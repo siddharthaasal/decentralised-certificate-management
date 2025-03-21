@@ -1,12 +1,12 @@
 {
   "canisters": {
-    "hello_backend": {
-      "main": "src/hello_backend/main.mo",
+    "CertificateRegistry": {
+      "main": "src/CertificateRegistry/main.mo",
       "type": "motoko"
     },
     "hello_frontend": {
       "dependencies": [
-        "hello_backend"
+        "CertificateRegistry"
       ],
       "source": [
         "src/hello_frontend/dist"
