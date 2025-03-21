@@ -14,8 +14,13 @@
     "@dfinity/agent": "^2.3.0",
     "@dfinity/candid": "^2.3.0",
     "@dfinity/principal": "^2.3.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@tailwindcss/vite": "^4.0.15",
+    "framer-motion": "^12.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.2.0",
+    "react-router": "^7.4.0",
+    "sonner": "^2.0.1",
+    "tailwindcss": "^4.0.15"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",
