@@ -1,68 +1,12 @@
-import HashMap "mo:base/HashMap";
-import Time "mo:base/Time";
-import Principal "mo:base/Principal";
-import Text "mo:base/Text";
-import Int "mo:base/Int";   
+dfx start --background
+dfx deploy
+replace the cannister's id
 
-actor CertificateRegistry {
-    type Certificate = {
-        name: Text;
-        issuer: Principal;
-        recipient: Principal;
-        ipfsHash: Text;
-        issueDate: Nat;
-        isValid: Bool;
-    };
 
-    // Stable storage workaround using an array
-    stable var storedCertificates : [(Text, Certificate)] = [];
+dfx canister call CertificateRegistry issueCertificate \
+'("Siddharth", principal "5fqta-h3gin-7kic5-tankp-jqu7d-7dv6p-n2tlw-vlzel-4vjo7-tknve-hqe", "QmTz5xxxxxxxxyzABCD123456789")'
 
-    // HashMap for fast lookups (not stable)
-    let certificates = HashMap.HashMap<Text, Certificate>(10, Text.equal, Text.hash);
 
-    // On start, restore the stable data
-    system func preupgrade() {
-        storedCertificates := Iter.toArray(certificates.entries());
-    };
 
-    system func postupgrade() {
-        for ((certId, cert) in storedCertificates.vals()) {
-            certificates.put(certId, cert);
-        };
-    };
-
-    public func issueCertificate(name: Text, recipient: Principal, ipfsHash: Text) : async Text {
-        let certId = Principal.toText(recipient) # "-" # Int.toText(Time.now());
-        let cert : Certificate = {
-            name = name;
-            issuer = Principal.fromActor(this);
-            recipient = recipient;
-            ipfsHash = ipfsHash;
-            issueDate = Time.now();
-            isValid = true;
-        };
-        certificates.put(certId, cert);
-        return certId;
-    };
-
-    public query func verifyCertificate(certId: Text) : async Bool {
-        switch (certificates.get(certId)) {
-            case (?cert) { cert.isValid };
-            case null { false };
-        }
-    };
-
-    public func revokeCertificate(certId: Text) : async Bool {
-        switch (certificates.get(certId)) {
-            case (?cert) {
-                certificates.put(certId, { cert with isValid = false });
-                true;
-            };
-            case null { false };
-        }
-    };
-
-    public query func getCertificate(certId: Text) : async ?Certificate {
-        certificates.get(certId);
-    };
-}
+cd <frontend-dir>
+npm start
