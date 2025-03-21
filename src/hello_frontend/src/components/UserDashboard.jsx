@@ -43,7 +43,7 @@ const UserDashboard = ({ canisterId, idlFactory }) => {
 
         try {
             const certs = await actor.getCertificatesForUser(Principal.fromText(userPrincipal));
-            setCertificates(certs);
+            setCertificates(certs.reverse());
             toast.success("Certificates loaded successfully!");
         } catch (error) {
             toast.error("Error fetching certificates.");
@@ -118,9 +118,18 @@ const UserDashboard = ({ canisterId, idlFactory }) => {
                                         className="p-6 bg-white shadow-md rounded-md border border-slate-300 hover:shadow-xl transition-all cursor-pointer"
                                     >
                                         <h4 className="text-2xl font-semibold text-slate-900">{cert.name}</h4>
-                                        <p className="text-slate-600 mt-2">
-                                            <strong>IPFS Hash:</strong> {cert.ipfsHash}
-                                        </p>
+                                        <div>
+                                            <p className="text-sm text-gray-600">Name: {cert.name}</p>
+                                            <a
+                                                className="text-sm font-medium"
+                                                href={`https://turquoise-secret-xerinae-597.mypinata.cloud/ipfs/${cert.ipfsHash}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                View
+                                            </a>
+
+                                        </div>
                                     </motion.div>
                                 ))}
                             </div>
